@@ -56,7 +56,7 @@ import HumanReplay from 'human-replay';
     <button id="replay">Replay</button>
     <button id="reset">Reset</button>
 
-    <script src="https://cdn.jsdelivr.net/npm/human-replay@latest/dist/browser/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/human-replay/dist/browser/index.min.js"></script>
     <script>
         const inputElement = document.getElementById('recordInput');
         const outputElement = document.getElementById('replayOutput');
