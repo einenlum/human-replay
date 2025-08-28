@@ -109,7 +109,6 @@ Check out the live demo at [https://einenlum.github.io/human-replay](https://ein
 - See how the library behaves in action
 - Record your own typing patterns
 - Generate replay code for your website
-- Test different replay speeds
 
 The demo allows you to replay specific inputs on your website without needing to install this library - perfect for quick testing or one-off animations.
 
