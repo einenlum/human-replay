@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Human Replay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Licorice&family=Staatliches&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="p-8 text-white bg-gradient-to-br from-slate-900 to-sky-950 pb-40">
+    <a href="https://github.com/Einenlum/human-replay" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#AEB8FE; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+    <div class="max-w-2xl mx-auto" x-data="{
+        recorder: null,
+        isRecording: false,
+        hasStopped: false,
+        compressedDataOutput: '',
+        vanillaJsOutput: '',
+        activeTab: null,
+        showCompressedModal: false,
+        
+        init() {
+            this.recorder = new HumanReplay(this.$refs.input);
+        },
+        
+        onInput() {
+            if (!this.isRecording) {
+                this.recorder.startRecording();
+                this.isRecording = true;
+                this.hasStopped = false;
+            }
+        },
+        
+        stopRecording() {
+            if (!this.recorder || !this.isRecording) return;
+            
+            this.recorder.stopRecording();
+            this.isRecording = false;
+            this.hasStopped = true;
+        },
+        
+        preview() {
+            if (!this.recorder || !this.hasStopped) return;
+            
+            const compressedData = this.recorder.getCompressedData();
+            HumanReplay.replayFromData(this.$refs.preview, compressedData, 50);
+            this.activeTab = 'preview';
+        },
+        
+        showCompressedData() {
+            if (!this.recorder || !this.hasStopped) return;
+            
+            const compressedData = this.recorder.getCompressedData();
+            this.compressedDataOutput = JSON.stringify(compressedData);
+            this.activeTab = 'compressed';
+        },
+        
+        showVanillaJs() {
+            if (!this.recorder || !this.hasStopped) return;
+            
+            const vanillaJs = this.recorder.generateVanillaJSCode();
+            this.vanillaJsOutput = vanillaJs;
+            this.activeTab = 'vanilla';
+        },
+        
+        copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Copied to clipboard');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        },
+        
+        reset() {
+            this.$refs.input.value = '';
+            this.$refs.preview.textContent = '';
+            this.recorder.reset();
+            this.isRecording = false;
+            this.hasStopped = false;
+            this.compressedDataOutput = '';
+            this.vanillaJsOutput = '';
+            this.activeTab = null;
+        }
+    }">
+        <h1 class="py-8 text-8xl font-bold mb-6 font-display tracking-wide uppercase text-center">Human Replay</h1>
+
+        <div class="text-center text-6xl font-cursive min-h-32" id="human-is-the-new-black"></div>
+
+        <div class="p-4 bg-blue-900/30 border border-blue-400/30 rounded-lg backdrop-blur">
+            <p>Check <a class="font-semibold text-amber-300 hover:text-amber-200 transition-all" href="https://github.com/einenlum/human-replay">@einenlum/human-replay</a> on GitHub for the library and documentation.</p>
+        </div>
+
+        <div class="py-16">
+            <h2 class="font-semibold text-xl mb-4 mt-8 text-center tracking-widest text-gray-300">What?</h2>
+            <div class="mb-6">Type anything you want. Replay it the way you typed it.</div>
+
+            <h2 class="font-semibold text-xl mb-4 text-center tracking-widest text-gray-300">Why?</h2>
+            <div class="mb-8">Because with AI and computers everywhere, automation and perfection have become boring. We lack analog feeling. Humans are cool again. Let's celebrate by adding a splash of humanity to our UI.</div>
+            
+            <div class="flex justify-center mt-8">
+                <div class="animate-bounce">
+                    <svg class="w-8 h-8 text-blue-300 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    
+        <div class="mb-8 p-4 bg-blue-900/30 border border-blue-400/30 rounded-lg backdrop-blur">
+            <strong>Two ways to use this library:</strong>
+            <div class="mt-2 space-y-1">
+                <div><strong>1. In your own projects:</strong> Install the library and record users typing in your forms that you can replay later.</div>
+                <div><strong>2. Use this demo page:</strong> Type something here and get the ready-to-use code for that specific typing animation.</div>
+            </div>
+        </div>
+    
+        <div class="space-y-4">
+                <p class="text-gray-300 mb-3 pt-8">
+                    Type naturally below - the library captures your exact rhythm, pauses, and corrections. 
+                    After stopping, you'll get code you can use anywhere to recreate this exact typing animation.
+                </p>
+
+                <div class="pt-8 p-6 bg-slate-800/60 border border-blue-400/30 rounded-xl backdrop-blur shadow-xl">
+                    <label class="block font-semibold mb-4 text-lg text-center text-blue-200">✨ Start typing to automatically record:</label>
+                    <input x-ref="input" @input="onInput()" type="text" placeholder="Type your message here..." 
+                           class="w-full p-4 border border-blue-400/40 rounded-lg bg-slate-700/40 backdrop-blur text-white placeholder-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all">
+                    
+                    <div class="flex gap-3 mt-4 justify-center">
+                        <button @click="stopRecording()" 
+                                :disabled="!isRecording"
+                                class="px-5 py-2 rounded-lg font-medium disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed bg-red-500 hover:bg-red-600 text-white transition-all">
+                            Stop Recording
+                        </button>
+                        
+                        <button @click="reset()" class="px-5 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-lg font-medium transition-all">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+        
+            <div x-show="hasStopped" class="flex gap-2">
+                <button @click="preview()" 
+                        class="px-4 py-2 rounded-lg font-medium bg-lime-700 hover:bg-green-600 text-white transition-all">
+                    Preview
+                </button>
+                
+                <button @click="showCompressedData()" 
+                        class="px-4 py-2 rounded-lg font-medium bg-blue-500 hover:bg-blue-600 text-white transition-all">
+                    Get Compressed Data
+                </button>
+                
+                <button @click="showVanillaJs()" 
+                        class="px-4 py-2 rounded-lg font-medium bg-purple-500 hover:bg-purple-600 text-white transition-all">
+                    Get Vanilla JS Code
+                </button>
+            </div>
+        
+            <div x-show="isRecording" class="p-3 bg-red-900/30 border border-red-400/30 rounded-lg text-red-300 backdrop-blur">
+                🔴 Recording... Type in the input above!
+            </div>
+        
+            <div x-show="activeTab === 'preview'">
+                <label class="block font-medium py-4">Your typing, replayed exactly as you typed it:</label>
+                <div x-ref="preview" class="w-full p-3 border border-gray-400 rounded-lg bg-white/10 backdrop-blur min-h-[50px] font-mono text-white text-lg"></div>
+            </div>
+        
+            <div x-show="activeTab === 'compressed'" class="mt-4">
+                <div class="mb-4 p-4 bg-blue-900/30 border border-blue-400/30 rounded-lg backdrop-blur">
+                    <h4 class="font-semibold mb-2">💾 Compressed Data - Use This on Your Website</h4>
+                    <p class="text-gray-300 mb-3">
+                        This compressed data contains your exact typing pattern. Copy it and use it in your own projects to recreate the same typing animation anywhere.
+                    </p>
+                        <div class="space-y-3 text-gray-300">
+                            <div class="mb-3 p-2 bg-blue-800/30 rounded">
+                                <strong class="text-blue-300">📘 For developers who want to use the library:</strong>
+                                <div class="mt-1">Install HumanReplay in your project to record ANY input field or textarea, not just this demo.</div>
+                            </div>
+                            <div>
+                                <strong class="text-blue-300">🚀 Method 1: NPM Install</strong>
+                                <div class="bg-gray-800/50 p-2 mt-1 rounded font-mono text-gray-200">
+                                    <pre><code>npm install human-replay</code></pre>
+                                    ...
+                                    <pre><code>
+// Record from any input element in your app
+import { HumanReplay } from 'human-replay';
+const recorder = new HumanReplay(inputElement);
+recorder.startRecording();
+
+// Or replay this specific data anywhere:
+const compressedData = /* paste your data below */;
+HumanReplay.replayFromData(element, compressedData, 50);</code></pre>
+                                </div>
+                            </div>
+                            <div>
+                                <strong class="text-green-300">🌐 Method 2: CDN (Browser)</strong>
+                                <div class="bg-gray-800/50 p-2 mt-1 rounded font-mono text-gray-200">
+                                    <pre class="break-all whitespace-pre-wrap"><code>&lt;script src="https://cdn.jsdelivr.net/npm/human-replay@latest/dist/browser/index.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+// Record from any element on your page
+const recorder = new HumanReplay(document.getElementById('any-input'));
+
+// Or replay this specific data:
+const data = /* paste your data below */;
+HumanReplay.replayFromData(element, data, 50);
+&lt;/script&gt;</code></pre>
+                                </div>
+                            </div>
+                            <div class="text-purple-300 bg-purple-900/30 p-2 rounded">
+                                <strong>💡 Don't want the library?</strong> Click "Get Vanilla JS Code" for standalone code that works without any dependencies.
+                            </div>
+                        </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block font-medium">Compressed Data:</label>
+                    <button @click="copyToClipboard(compressedDataOutput)" 
+                            class="px-3 py-1 text-xs bg-gray-600 hover:bg-gray-700 text-white rounded">
+                        Copy
+                    </button>
+                </div>
+                <pre x-text="compressedDataOutput" class="w-full p-3 border border-gray-400 rounded-lg bg-gray-800/50 overflow-auto max-h-60 text-gray-200"></pre>
+            </div>
+        
+            <div x-show="activeTab === 'vanilla'" class="mt-4">
+                <div class="mb-4 p-4 bg-purple-900/30 border border-purple-400/30 rounded-lg backdrop-blur">
+                    <h4 class="font-semibold mb-2">✂️ Standalone Code - Zero Dependencies</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <p><strong>Perfect for:</strong> When you want the typing animation but don't want to install the library.</p>
+                        <p><strong>How to use:</strong> Copy the code below and paste it directly into your HTML file - that's it! No npm install, no imports, no CDN links needed.</p>
+                        <p><strong>What it does:</strong> Creates the exact same typing animation you just recorded, completely self-contained.</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block font-medium">Vanilla JS Code:</label>
+                    <button @click="copyToClipboard(vanillaJsOutput)" 
+                            class="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs">
+                        Copy
+                    </button>
+                </div>
+                <pre x-text="vanillaJsOutput" class="w-full p-3 border border-gray-400 rounded-lg bg-gray-800/50 overflow-auto max-h-60 text-gray-200"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+</body>
+</html>

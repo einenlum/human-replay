@@ -1,24 +1,35 @@
 {
   "name": "human-replay",
-  "private": true,
-  "version": "2.0.0",
+  "version": "3.0.0",
+  "description": "Library for recording and replaying human typing patterns",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "browser": "dist/browser/index.min.js",
   "type": "module",
+  "files": [
+    "dist/**/*",
+    "README.md"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "tsc",
+    "build:browser": "npm run build && node build-browser.js",
+    "build:all": "npm run build && npm run build:browser",
+    "dev": "tsc --watch",
+    "docs:dev": "cd docs && npm run dev",
+    "docs:build": "npm run build:all && cd docs && npm run build",
+    "docs:install": "cd docs && npm install"
   },
+  "keywords": [
+    "typing",
+    "replay",
+    "animation",
+    "human",
+    "text"
+  ],
+  "author": "Yann Rabiller <contact@einenlum.com> https://einenlum.com",
+  "license": "MIT",
   "devDependencies": {
-    "@egoist/tailwindcss-icons": "^1.7.4",
-    "@fontsource/coming-soon": "^5.0.8",
-    "@fontsource/licorice": "^5.0.18",
-    "@fontsource/staatliches": "^5.0.18",
-    "@iconify-json/lucide": "^1.1.170",
-    "alpinejs": "^3.13.7",
-    "autoprefixer": "^10.4.17",
-    "highlight.js": "^11.9.0",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
-    "vite": "^5.1.4"
+    "esbuild": "^0.25.9",
+    "typescript": "^5.0.0"
   }
 }
