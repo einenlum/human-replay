@@ -32,7 +32,7 @@ import HumanReplay from 'human-replay';
 ### CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/human-replay/dist/browser/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/human-replay"></script>
 <script>
     // window.HumanReplay
 </script>
@@ -56,7 +56,7 @@ import HumanReplay from 'human-replay';
     <button id="replay">Replay</button>
     <button id="reset">Reset</button>
 
-    <script src="https://cdn.jsdelivr.net/npm/human-replay/dist/browser/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/human-replay"></script>
     <script>
         const inputElement = document.getElementById('recordInput');
         const outputElement = document.getElementById('replayOutput');
