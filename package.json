@@ -1,11 +1,19 @@
 {
   "name": "human-replay",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Library for recording and replaying human typing patterns",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "browser": "dist/browser/index.min.js",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "browser": "./dist/browser/index.min.js"
+    }
+  },
   "files": [
     "dist/**/*",
     "README.md"
